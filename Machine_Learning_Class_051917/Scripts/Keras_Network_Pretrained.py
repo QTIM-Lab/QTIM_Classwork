@@ -62,15 +62,7 @@ VGG_Model = applications.VGG16(include_top=False, weights='imagenet')
 # Alternatively, we can load our saved arrays from a previous run of
 # of the program.
 bottleneck_features_train = np.load('../Results/bottleneck_features_train.npy')
-
-print bottleneck_features_train.shape
-
-
-test_data = np.load('../Results/bottleneck_features_test.npy')
-
-# print bottleneck_features_test.shape
-
-# fd = df
+bottleneck_features_test = np.load('../Results/bottleneck_features_test.npy')
 
 """ We will have to generate our own labels this time. Luckily, all of our data
     has the same amount of classes and is in order. We convert them to numpy arrays
@@ -95,5 +87,5 @@ model.compile(optimizer='rmsprop',
 model.fit(bottleneck_features_train, train_labels,
           epochs=epochs,
           batch_size=batch_size,
-          validation_data=(test_data, train_labels))
+          validation_data=(bottleneck_features_test, test_labels))
 model.save_weights(output_weights_path)

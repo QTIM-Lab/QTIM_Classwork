@@ -10,7 +10,7 @@ from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_a
 sample_file = '../data/oxfordflower17_organized/testing/0/image_0001.jpg'
 
 # We'll then use keras' load_img command to store that file in an image class, and display it.
-test_image = load_img(sample_file)  # this is a PIL image
+test_image = load_img(sample_file)
 test_image.show()
 
 # In order to work with the image as data, we'll need to transform it from keras' image class
@@ -35,16 +35,19 @@ datagen = ImageDataGenerator(
         horizontal_flip=True,
         fill_mode='nearest')
 
+# How many copies of this image we want to create.
+augmentation_multiplier = 40
+
 """ The ImageDataGenerator's flow command will save randomly augmented images into a
     directory of our choosing with a prefix and format of our choosing.
 """
 
-output_dir = '../data/augmentation_test'
+output_dir = '../Results/augmentation_test'
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
 num_images = 0
-for batch in datagen.flow(test_array, batch_size=1, save_to_dir='../data/augmentation_test', save_prefix='augmentation', save_format='jpeg'):
+for batch in datagen.flow(test_array, batch_size=1, save_to_dir=output_dir, save_prefix='augmentation', save_format='jpeg'):
     num_images += 1
-    if num_images > 20:
+    if num_images > augmentation_multiplier:
         break  # otherwise the generator would loop indefinitely

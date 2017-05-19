@@ -41,9 +41,11 @@ generator = datagen.flow_from_directory(
     shuffle=False)
 
 # Extract features from the penultimate layers of the VGG network
-# on our training images.
+# on our training images. This may take some time.
 bottleneck_features_train = VGG_Model.predict_generator(
     generator, train_samples // batch_size, verbose=1)
+np.save(open('../Results/bottleneck_features_train.npy', 'w'),
+            bottleneck_features_train)
 
 # Repeat the bottle-necking process for testing data.
 generator = datagen.flow_from_directory(
@@ -54,13 +56,15 @@ generator = datagen.flow_from_directory(
     shuffle=False)
 bottleneck_features_test = VGG_Model.predict_generator(
     generator, test_samples // batch_size, verbose=1)
+np.save(open('../Results/bottleneck_features_test.npy', 'w'),
+            bottleneck_features_train)
 
 """ We will have to generate our own labels this time. Luckily, all of our data
     has the same amount of classes and is in order. We convert them to numpy arrays
     for better compatability with keras.
 """
 train_labels = to_categorical(np.array([int(index/64) for index in range(64*17)]))
-train_labels = to_categorical(np.array([int(index/16) for index in range(16*17)]))
+test_labels = to_categorical(np.array([int(index/16) for index in range(16*17)]))
 
 """ We create a much simpler model than we did before. We can still find success with
     this model because the pre-calibrated VGG-net has already distilled a set of

@@ -37,18 +37,19 @@ model.compile(loss='categorical_crossentropy',
 
 batch_size = 16
 
-# this is the augmentation configuration we will use for training
+# This is the augmentation configuration we will use for training.
+# It shears, zooms, and horizontally flips input images.
 train_datagen = ImageDataGenerator(
         rescale=1./255,
         shear_range=0.2,
         zoom_range=0.2,
         horizontal_flip=True)
 
-# this is the augmentation configuration we will use for testing:
-# only rescaling
+# The testing set will have no augmentation. We only rescale the
+# inpute values from 0 to 1 instead of from 1 to 255.
 test_datagen = ImageDataGenerator(rescale=1./255)
 
-# this is a generator that will read pictures found in
+# This is a generator that will read pictures found in
 # subfolers of 'data/train', and indefinitely generate
 # batches of augmented image data
 train_generator = train_datagen.flow_from_directory(

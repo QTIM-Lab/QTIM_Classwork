@@ -1,3 +1,10 @@
+""" We take a different method of attack on the Oxford 17 Flowers
+    dataset. This time, we are going to use an already-successful
+    and widely-used network, the VGG16 network, as a starting point
+    for our own classification problem. 
+    
+"""
+
 from keras import applications
 from keras.preprocessing.image import ImageDataGenerator
 from keras import optimizers
@@ -25,7 +32,9 @@ bottleneck_features_test = np.load('../Results/bottleneck_features_test.npy')
 
 """ We will have to generate our own labels this time. Luckily, all of our data
     has the same amount of classes and is in order. We convert them to numpy arrays
-    for better compatability with keras.
+    for better compatability with keras using the "to_categorical" command. This converts
+    a class value in the format [5] to [0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0], which is more
+    amenable to neural network calculations.
 """
 train_labels = to_categorical(np.array([int(index/64) for index in range(64*17)]))
 test_labels = to_categorical(np.array([int(index/16) for index in range(16*17)]))

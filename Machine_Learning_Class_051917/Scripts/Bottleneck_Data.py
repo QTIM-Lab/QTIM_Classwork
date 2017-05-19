@@ -21,6 +21,8 @@ test_data_dir = '../data/oxfordflower17_organized/testing'
 # Instantiate some parameters for running the models later.
 train_samples = 1088
 test_samples = 272
+epochs = 20
+batch_size = 16
 img_width, img_height = 150, 150
 
 VGG_Model = applications.VGG16(include_top=False, weights='imagenet')

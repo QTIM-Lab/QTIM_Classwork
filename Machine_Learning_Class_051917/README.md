@@ -1,0 +1,3 @@
+# Deep Learning with Python Tutorial
+
+Welcome! Our goal in this repository is to install some of the necessary python packages for running deep neural networks, and to run some of these networks on some sample data from the Oxford 17 Flowers dataset (linked here: http://www.robots.ox.ac.uk/~vgg/data/flowers/17/). We'll be particularly interested in convolutional neural networks (CNNs), and how one can use data augmentation and pre-trained networks to increase the effectiveness of these CNNs on small datasets.

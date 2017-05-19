@@ -43,7 +43,7 @@ generator = datagen.flow_from_directory(
 # Extract features from the penultimate layers of the VGG network
 # on our training images.
 bottleneck_features_train = VGG_Model.predict_generator(
-    generator, train_samples // batch_size)
+    generator, train_samples // batch_size, verbose=1)
 
 # Repeat the bottle-necking process for testing data.
 generator = datagen.flow_from_directory(
@@ -53,7 +53,7 @@ generator = datagen.flow_from_directory(
     class_mode=None,
     shuffle=False)
 bottleneck_features_test = VGG_Model.predict_generator(
-    generator, test_samples // batch_size)
+    generator, test_samples // batch_size, verbose=1)
 
 """ We will have to generate our own labels this time. Luckily, all of our data
     has the same amount of classes and is in order. We convert them to numpy arrays
@@ -64,7 +64,7 @@ train_labels = to_categorical(np.array([int(index/16) for index in range(16*17)]
 
 """ We create a much simpler model than we did before. We can still find success with
     this model because the pre-calibrated VGG-net has already distilled a set of
-    informative features from the original image. The hope is that these features will
+    informative features from the original image to give us a "head-start". The hope is that these features will
     make our classification scheme go much faster.
 """
 model = Sequential()

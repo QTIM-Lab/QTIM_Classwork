@@ -48,6 +48,8 @@ if not os.path.exists(output_dir):
 
 num_images = 0
 for batch in datagen.flow(test_array, batch_size=1, save_to_dir=output_dir, save_prefix='augmentation', save_format='jpeg'):
+
     num_images += 1
-    if num_images > augmentation_multiplier:
+    print 'Augmenting image #... ', num_images
+    if num_images >= augmentation_multiplier:
         break  # otherwise the generator would loop indefinitely

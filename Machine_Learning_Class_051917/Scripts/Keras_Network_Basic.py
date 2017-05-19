@@ -65,14 +65,15 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 
 # This is a generator that will read pictures found in
 # subfolers of 'data/train', and indefinitely generate
-# batches of augmented image data
+# batches (batch_size) of augmented image data.
+batch_size = 16
 train_generator = train_datagen.flow_from_directory(
         '../data/oxfordflower17_organized/training',  # this is the target directory
         target_size=(90, 90),  # all images will be resized to 90x90
         batch_size=batch_size,
         class_mode='categorical')
 
-# This is a similar generator, for validation data
+# This is a similar generator, for validation (testing) data
 validation_generator = test_datagen.flow_from_directory(
         '../data/oxfordflower17_organized/testing',
         target_size=(90, 90),
@@ -83,7 +84,6 @@ validation_generator = test_datagen.flow_from_directory(
     set a number of epoch or steps per epoch that we think will get accurate answers
     without overfitting.
 """
-batch_size = 16
 model.fit_generator(
         train_generator,
         steps_per_epoch=640 // batch_size,

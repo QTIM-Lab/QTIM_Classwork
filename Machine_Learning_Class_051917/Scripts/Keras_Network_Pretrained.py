@@ -32,32 +32,45 @@ VGG_Model = applications.VGG16(include_top=False, weights='imagenet')
 
 # Set up our data generator to automatically pull training data from our
 # training directory. All images are rescaled to the intensity range 0-1.
-datagen = ImageDataGenerator(rescale=1. / 255)
-generator = datagen.flow_from_directory(
-    train_data_dir,
-    target_size=(img_width, img_height),
-    batch_size=batch_size,
-    class_mode=None,
-    shuffle=False)
+# datagen = ImageDataGenerator(rescale=1. / 255)
+# generator = datagen.flow_from_directory(
+#     train_data_dir,
+#     target_size=(img_width, img_height),
+#     batch_size=batch_size,
+#     class_mode=None,
+#     shuffle=False)
 
-# Extract features from the penultimate layers of the VGG network
-# on our training images. This may take some time.
-bottleneck_features_train = VGG_Model.predict_generator(
-    generator, train_samples // batch_size, verbose=1)
-np.save(open('../Results/bottleneck_features_train.npy', 'w'),
-            bottleneck_features_train)
+# # Extract features from the penultimate layers of the VGG network
+# # on our training images. This may take some time.
+# bottleneck_features_train = VGG_Model.predict_generator(
+#     generator, train_samples // batch_size, verbose=1)
+# np.save(open('../Results/bottleneck_features_train.npy', 'w'),
+#             bottleneck_features_train)
 
-# Repeat the bottle-necking process for testing data.
-generator = datagen.flow_from_directory(
-    test_data_dir,
-    target_size=(img_width, img_height),
-    batch_size=batch_size,
-    class_mode=None,
-    shuffle=False)
-bottleneck_features_test = VGG_Model.predict_generator(
-    generator, test_samples // batch_size, verbose=1)
-np.save(open('../Results/bottleneck_features_test.npy', 'w'),
-            bottleneck_features_train)
+# # Repeat the bottle-necking process for testing data.
+# generator = datagen.flow_from_directory(
+#     test_data_dir,
+#     target_size=(img_width, img_height),
+#     batch_size=batch_size,
+#     class_mode=None,
+#     shuffle=False)
+# bottleneck_features_test = VGG_Model.predict_generator(
+#     generator, test_samples // batch_size, verbose=1)
+# np.save(open('../Results/bottleneck_features_test.npy', 'w'),
+#             bottleneck_features_test)
+
+# Alternatively, we can load our saved arrays from a previous run of
+# of the program.
+bottleneck_features_train = np.load('../Results/bottleneck_features_train.npy')
+
+print bottleneck_features_train.shape
+
+
+test_data = np.load('../Results/bottleneck_features_test.npy')
+
+# print bottleneck_features_test.shape
+
+# fd = df
 
 """ We will have to generate our own labels this time. Luckily, all of our data
     has the same amount of classes and is in order. We convert them to numpy arrays
@@ -82,5 +95,5 @@ model.compile(optimizer='rmsprop',
 model.fit(bottleneck_features_train, train_labels,
           epochs=epochs,
           batch_size=batch_size,
-          test_data=(bottleneck_features_test, test_labels))
+          validation_data=(test_data, train_labels))
 model.save_weights(output_weights_path)

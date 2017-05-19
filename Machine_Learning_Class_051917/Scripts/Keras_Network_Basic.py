@@ -50,8 +50,6 @@ model.compile(loss='categorical_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
 
-batch_size = 16
-
 # This is the augmentation configuration we will use for training.
 # It shears, zooms, and horizontally flips input images. Additionally
 # it rescales image intensities to the range [0 ... 1]
@@ -72,7 +70,7 @@ train_generator = train_datagen.flow_from_directory(
         '../data/oxfordflower17_organized/training',  # this is the target directory
         target_size=(90, 90),  # all images will be resized to 90x90
         batch_size=batch_size,
-        class_mode='categorical')  # since we use binary_crossentropy loss, we need binary labels
+        class_mode='categorical')
 
 # This is a similar generator, for validation data
 validation_generator = test_datagen.flow_from_directory(
@@ -81,11 +79,17 @@ validation_generator = test_datagen.flow_from_directory(
         batch_size=batch_size,
         class_mode='categorical')
 
+""" Finally, we train our model on batches (batch_size) of our training data. We 
+    set a number of epoch or steps per epoch that we think will get accurate answers
+    without overfitting.
+"""
+batch_size = 16
 model.fit_generator(
         train_generator,
         steps_per_epoch=640 // batch_size,
-        epochs=10,
+        epochs=20,
         validation_data=validation_generator,
         validation_steps=800 // batch_size)
 
-model.save_weights('first_try.h5')  # always save your weights after training or during training
+# We save our weights 
+model.save_weights('../Results/Basic_Network_Weights.h5')
